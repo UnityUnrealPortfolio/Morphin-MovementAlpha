@@ -6,10 +6,10 @@ namespace PathCreation.Examples {
     [ExecuteInEditMode]
     public class PathPlacer : PathSceneTool {
 
-        public GameObject prefab;
+        public GameObject[] prefab;
         public GameObject holder;
         public float spacing = 3;
-
+        public float maxSpacingDist = 10, minSpacingDist= 2;
         const float minSpacing = .1f;
 
         void Generate () {
@@ -18,13 +18,15 @@ namespace PathCreation.Examples {
 
                 VertexPath path = pathCreator.path;
 
-                spacing = Mathf.Max(minSpacing, spacing);
+                spacing = Mathf.Max(minSpacing, maxSpacingDist);
                 float dst = 0;
 
                 while (dst < path.length) {
+                    int randomModel = Random.Range(0,prefab.Length);
                     Vector3 point = path.GetPointAtDistance (dst);
                     Quaternion rot = path.GetRotationAtDistance (dst);
-                    Instantiate (prefab, point, rot, holder.transform);
+                    Instantiate(prefab[randomModel], point, rot, holder.transform);
+                    spacing = Random.Range(minSpacingDist, maxSpacingDist);
                     dst += spacing;
                 }
             }
